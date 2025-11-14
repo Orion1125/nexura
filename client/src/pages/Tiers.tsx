@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { TIER_UNLOCK_MIN_LEVEL, TIER_COLORS } from "@shared/schema";
 
 const TIER_LEVEL_RANGES = {
   enchanter: { min: 0, max: 5 },
@@ -9,14 +11,6 @@ const TIER_LEVEL_RANGES = {
   conscious: { min: 15, max: 30 },
   oracle: { min: 30, max: 50 },
   templar: { min: 50, max: Infinity }
-};
-
-const TIER_COLORS = {
-  enchanter: "#8b5cf6", // purple
-  illuminated: "#10b981", // green
-  conscious: "#3b82f6", // blue
-  oracle: "#8b1538", // wine red
-  templar: "#ef4444" // red
 };
 
 const tierData = [
@@ -53,17 +47,30 @@ const tierData = [
 ];
 
 export default function Tiers() {
-  const [userLevel] = useState(8); // Mock user level
-  
+  const { user } = useAuth();
+
+  // Only show tiers when we have a server profile
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background overflow-auto p-6">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold text-foreground">Nexura Tiers</h1>
+          <p className="mt-4 text-muted-foreground">No tier data available.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const userLevel = user.level ?? 0;
   const getUserTier = (level: number) => {
-    if (level >= TIER_LEVEL_RANGES.templar.min) return "templar";
-    if (level >= TIER_LEVEL_RANGES.oracle.min) return "oracle";
-    if (level >= TIER_LEVEL_RANGES.conscious.min) return "conscious";
-    if (level >= TIER_LEVEL_RANGES.illuminated.min) return "illuminated";
+    if (level >= TIER_UNLOCK_MIN_LEVEL.templar) return "templar";
+    if (level >= TIER_UNLOCK_MIN_LEVEL.oracle) return "oracle";
+    if (level >= TIER_UNLOCK_MIN_LEVEL.conscious) return "conscious";
+    if (level >= TIER_UNLOCK_MIN_LEVEL.illuminated) return "illuminated";
     return "enchanter";
   };
 
-  const userTier = getUserTier(userLevel);
+  const userTier = useMemo(() => getUserTier(userLevel), [userLevel]);
 
   return (
     <div className="min-h-screen bg-background overflow-auto p-6" data-testid="tiers-page">

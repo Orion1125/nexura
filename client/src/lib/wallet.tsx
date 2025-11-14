@@ -1,37 +1,18 @@
 import React from "react";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, goerli } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
-import { w3mProvider } from "@web3modal/ethereum";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { initAppKit } from "./appkit";
 
-const projectId = "fb6bea018dee724957900b253ba9683c"; // WalletConnect v2 project id
-
-const chains = [mainnet, goerli];
-
-// Configure chains with public provider and WalletConnect provider (for QR/connect support)
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId }), publicProvider()]);
-
-// Create wagmi config with Injected + WalletConnect connectors
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors: [
-    new InjectedConnector({ chains }),
-    new WalletConnectConnector({
-      options: {
-        projectId,
-      },
-      chains,
-    }),
-  ],
-  publicClient,
-} as any);
-
+// WalletProvider initializes the optional Reown AppKit modal so the modal
+// and Wagmi adapter are mounted at the app root. If AppKit isn't available
+// the init call no-ops.
 export function WalletProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <WagmiConfig config={wagmiConfig as any}>
-      {children}
-    </WagmiConfig>
-  );
+  React.useEffect(() => {
+    // initialize AppKit but don't await here to avoid delaying render
+    initAppKit().catch((err) => {
+      // swallow errors — AppKit is optional
+      // eslint-disable-next-line no-console
+      console.warn("AppKit init error:", err);
+    });
+  }, []);
+
+  return <>{children}</>;
 }

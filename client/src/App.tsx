@@ -23,6 +23,7 @@ import Projects from "@/pages/Projects";
 import NexuraSidebar from "@/components/QuestflowSidebar";
 import ProfileBar from "@/components/ProfileBar";
 import { WalletProvider } from "@/lib/wallet";
+import { AuthProvider } from "@/lib/auth";
 import OrgSignInButton from "@/components/OrgSignInButton";
 
 function Router() {
@@ -62,19 +63,24 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
+        <AuthProvider>
         <TooltipProvider>
           <SidebarProvider style={sidebarStyle as React.CSSProperties}>
             <div className="flex h-screen w-full bg-background">
               <NexuraSidebar />
               <div className="flex flex-col flex-1">
                 {/* Top Header with Profile Bar */}
-                <header className="flex items-center justify-between p-3 border-b border-border bg-background">
+                <header className="flex items-center justify-between p-4 app-header">
                   <SidebarTrigger data-testid="button-sidebar-toggle" />
                   <ProfileBar />
                 </header>
                 {/* Main Content with Better Scrolling */}
-                <main className="flex-1 overflow-y-auto">
-                  <Router />
+                <main className="flex-1 overflow-y-auto main-shell">
+                  <div className="container max-w-7xl mx-auto">
+                    <div className="card-glass p-6">
+                      <Router />
+                    </div>
+                  </div>
                 </main>
               </div>
               <OrgSignInButton />
@@ -82,6 +88,7 @@ function App() {
           </SidebarProvider>
           <Toaster />
         </TooltipProvider>
+        </AuthProvider>
       </WalletProvider>
     </QueryClientProvider>
   );
