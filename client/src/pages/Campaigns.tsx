@@ -19,7 +19,7 @@ export default function Campaigns() {
       description: "Explore the revolutionary trust and reputation system built for the decentralized future. Join thousands of early adopters.",
       projectName: "Intuition",
       participants: 3200,
-      rewardPool: "100,000 tTRUST",
+      // rewardPool: "100,000 tTRUST",
       startDate: "Sep 19, 2024",
       endDate: "Nov 19, 2024",
       status: "Active",
@@ -32,7 +32,7 @@ export default function Campaigns() {
       description: "Master the art of creating meaningful attestations and build your reputation on Intuition.",
       projectName: "Intuition",
       participants: 1850,
-      rewardPool: "50,000 tTRUST",
+      // rewardPool: "50,000 tTRUST",
       startDate: "Sep 25, 2024",
       endDate: "Oct 25, 2024",
       status: "Active",
@@ -45,7 +45,7 @@ export default function Campaigns() {
       description: "Help expand the trust network by creating quality attestations and building meaningful connections.",
       projectName: "Intuition",
       participants: 950,
-      rewardPool: "25,000 tTRUST",
+      // rewardPool: "25,000 tTRUST",
       startDate: "Oct 5, 2024",
       endDate: "Nov 5, 2024",
       status: "Active",
@@ -61,7 +61,7 @@ export default function Campaigns() {
       description: "Join the next phase of Intuition's ecosystem development. Help shape the future of decentralized trust.",
       projectName: "Intuition",
       participants: 0,
-      rewardPool: "200,000 tTRUST",
+      // rewardPool: "200,000 tTRUST",
       startDate: "Dec 1, 2024",
       endDate: "Feb 1, 2025",
       status: "Coming Soon",
@@ -116,14 +116,6 @@ export default function Campaigns() {
             <span className="font-medium">{campaign.participants.toLocaleString()}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">Rewards:</span>
-            <div className="flex items-center space-x-1">
-              <span className="text-blue-500 font-bold">5XP</span>
-              <span className="text-muted-foreground">+</span>
-              <span className="font-medium text-primary">{campaign.rewardPool}</span>
-            </div>
-          </div>
-          <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground">Duration:</span>
             <span className="font-medium">{campaign.startDate} - {campaign.endDate}</span>
           </div>
@@ -158,7 +150,7 @@ export default function Campaigns() {
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Campaigns</h1>
           <p className="text-muted-foreground">
-            Join unique project campaigns and contribute to the growth of the Nexura ecosystem
+            Join unique project campaigns and contribute to the growth of the QUESTFLOW ecosystem
           </p>
         </div>
 
@@ -212,7 +204,7 @@ export default function Campaigns() {
                 <p className="text-sm text-muted-foreground">
                   Campaigns are unique, project-specific initiatives that allow you to contribute to ecosystem growth. 
                   Unlike daily quests, campaigns have specific durations, larger reward pools, and focus on meaningful 
-                  contributions to the Nexura ecosystem and partner projects.
+                  contributions to the QUESTFLOW ecosystem and partner projects.
                 </p>
               </div>
             </div>

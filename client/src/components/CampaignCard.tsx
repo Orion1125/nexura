@@ -119,21 +119,6 @@ export default function CampaignCard({
             <div>to {formatDate(endDate)}</div>
           </div>
         </div>
-
-        {/* Reward Pool */}
-        {rewardPool && (
-          <div className="border-t border-card-border pt-4">
-            <div className="text-sm text-muted-foreground mb-1">Rewards</div>
-            <div className="flex items-center space-x-2">
-              <span className="text-blue-500 font-bold">5XP</span>
-              <span className="text-muted-foreground">+</span>
-              <div className="flex items-center space-x-1">
-                <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                <span className="font-bold text-card-foreground">{rewardPool.amount} {rewardPool.token}</span>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </Card>
   );

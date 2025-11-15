@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
@@ -87,25 +85,93 @@ export default function Discover() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Fetch campaigns and quests from the backend. If none are available,
-  // do not render hardcoded demo content.
-  const { data: campaignsData } = useQuery({
-    queryKey: ["/campaigns"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/campaigns");
-      return res.json();
-    },
-    retry: false,
-  });
+  // Intuition hero campaigns
+  const heroCampaigns = [
+    {
+      id: "attestation-master",
+      title: "Attestation Master Challenge",
+      description: "Master the art of creating meaningful attestations and build your reputation on Intuition.",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      participantCount: 1850,
+      startDate: "2024-09-25T10:00:00Z",
+      endDate: "2024-10-25T10:00:00Z",
+      isLive: true,
+      rewardPool: {
+        amount: "50,000",
+        token: "tTRUST"
+      },
+      heroImage: trustNetworkImg
+    }
+  ];
 
-  const { data: questsData } = useQuery({
-    queryKey: ["/quests"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/quests");
-      return res.json();
+  // Intuition focused quests
+  const mockQuests = [
+    {
+      title: "Getting Started on Intuition",
+      description: "Learn the basics of Intuition and complete your first attestation",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      heroImage: gettingStartedImg,
+      participants: 2400,
+      rewards: "500 tTRUST",
+      tags: ["New"],
+      questId: "getting-started-intuition"
     },
-    retry: false,
-  });
+    {
+      title: "Creating Your First Identity",
+      description: "Set up your identity profile on Intuition and explore the ecosystem",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      heroImage: identityCreationImg,
+      participants: 1800,
+      rewards: "300 tTRUST",
+      questId: "creating-first-identity"
+    },
+    {
+      title: "Attestation Mastery",
+      description: "Master the art of creating meaningful attestations on Intuition",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      heroImage: attestationMasteryImg,
+      participants: 1500,
+      rewards: "750 tTRUST",
+      questId: "attestation-mastery"
+    }
+  ];
+
+  const mockCampaigns = [
+    {
+      title: "Intuition Testnet Launch",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      heroImage: campaignLaunchImg,
+      participantCount: 3200,
+      startDate: "2024-09-19T09:00:00Z",
+      endDate: "2024-11-19T09:00:00Z",
+      isLive: true,
+      rewardPool: {
+        amount: "100,000",
+        token: "tTRUST"
+      },
+      campaignId: "intuition-testnet-launch"
+    },
+    {
+      title: "Developer Adoption Sprint",
+      projectName: "Intuition",
+      projectLogo: questHero1, // Using quest hero as project logo
+      heroImage: developerAdoptionImg,
+      participantCount: 890,
+      startDate: "2024-09-30T11:00:00Z",
+      endDate: "2024-10-30T11:00:00Z",
+      isLive: true,
+      rewardPool: {
+        amount: "75,000",
+        token: "tTRUST"
+      },
+      campaignId: "developer-adoption-sprint"
+    }
+  ];
 
   const trendingDapps = [
     { name: "Intuition Portal", logo: intuitionPortalLogo, category: "Portal" },
@@ -160,7 +226,7 @@ export default function Discover() {
     {
       author: "CommunityLead",
       avatar: avatar5,
-  content: "The Nexura platform integration with Intuition creates a seamless experience for both quest completion and reputation building. Great UX design!",
+      content: "The QUESTFLOW platform integration with Intuition creates a seamless experience for both quest completion and reputation building. Great UX design!",
       timeAgo: "10 hours ago",
       attestations: 19,
       tTrustEarned: "6.8",
@@ -202,8 +268,8 @@ export default function Discover() {
 
       {/* Main Content */}
       <div className="p-6">
-  {/* Hero Campaign Section */}
-  <HeroCampaign campaigns={campaignsData?.campaigns ?? []} />
+        {/* Hero Campaign Section */}
+        <HeroCampaign campaigns={heroCampaigns} />
 
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
@@ -226,15 +292,11 @@ export default function Discover() {
                 </Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Array.isArray(campaignsData?.campaigns) && campaignsData.campaigns.length > 0 ? (
-                  campaignsData.campaigns.map((campaign: any, index: number) => (
-                    <div key={`campaign-${index}`} className="transform-wrapper" style={{ transform: 'scale(0.85)', transformOrigin: 'top left' }}>
-                      <CampaignCard {...campaign} from="explore" />
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-muted-foreground">No campaigns available.</div>
-                )}
+                {mockCampaigns.map((campaign, index) => (
+                  <div key={`campaign-${index}`} className="transform-wrapper" style={{ transform: 'scale(0.85)', transformOrigin: 'top left' }}>
+                    <CampaignCard {...campaign} from="explore" />
+                  </div>
+                ))}
               </div>
             </section>
 
@@ -349,8 +411,6 @@ export default function Discover() {
             </section>
 
           </TabsContent>
-
-
 
         </Tabs>
       </div>

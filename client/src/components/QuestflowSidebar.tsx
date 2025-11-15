@@ -11,63 +11,34 @@ import {
   BookOpen, 
   Compass, 
   Users, 
-  Trophy,
   Zap, 
   Calendar, 
   Target, 
+  BarChart2, 
+  Trophy, 
+  Activity, 
+  TrendingUp
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const mainNavItems = [
-  {
-    title: "Learn",
-    subtitle: "",
-    icon: BookOpen,
-    href: "/learn",
-    activeClass: "nav-learn-active"
-  },
-  {
-    title: "Explore",
-    icon: Compass,
-    href: "/",
-    activeClass: "nav-explore-active"
-  },
-  {
-    title: "Referrals",
-    icon: Users,
-    href: "/referrals",
-    activeClass: "nav-referrals-active"
-  },
-  {
-    title: "Quests",
-    icon: Zap,
-    href: "/quests",
-    activeClass: "nav-quests-active"
-  },
-  {
-    title: "Campaigns",
-    icon: Calendar,
-    href: "/campaigns",
-    activeClass: "nav-campaigns-active"
-  },
-  {
-    title: "Ecosystem Dapps",
-    icon: Target,
-    href: "/ecosystem-dapps",
-    activeClass: "nav-ecosystem-dapps-active"
-  }
-  ,
-  {
-    title: "Leaderboard",
-    icon: Trophy,
-    href: "/leaderboard",
-    activeClass: "nav-leaderboard-active"
-  }
+  { title: "Learn", icon: BookOpen, href: "/learn" },
+  { title: "Explore", icon: Compass, href: "/" },
+  { title: "Referrals", icon: Users, href: "/referrals" },
+  { title: "Quests", icon: Zap, href: "/quests" },
+  { title: "Campaigns", icon: Calendar, href: "/campaigns" },
+  { title: "Ecosystem Dapps", icon: Target, href: "/ecosystem-dapps" },
+  { title: "Trade", icon: Activity, href: "/trade" },
+  { title: "Analytics", icon: BarChart2, href: "/analytics" },
+  { title: "Leaderboard", icon: TrendingUp, href: "/leaderboard" },
+  { title: "Achievements", icon: Trophy, href: "/achievements" }
 ];
 
-
-export default function NexuraSidebar() {
+export default function QuestflowSidebar() {
   const [location] = useLocation();
+
+  // Hide sidebar completely on /home or /
+  if (location === "/" || location === "/home") return null;
 
   return (
     <Sidebar className="border-r border-border/40">
@@ -79,8 +50,8 @@ export default function NexuraSidebar() {
               <span className="text-primary-foreground font-bold text-sm">QF</span>
             </div>
             <div className="flex flex-col font-bold text-lg text-foreground">
-              <span>NEX</span>
-              <span className="ml-4">URA</span>
+              <span>QUEST</span>
+              <span className="ml-4">FLOW</span>
             </div>
           </div>
         </div>
@@ -93,23 +64,20 @@ export default function NexuraSidebar() {
                 const isActive = location === item.href || (item.href === "/" && (location === "/" || location === "/discover"));
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
+                    <SidebarMenuButton
                       asChild
-                      isActive={isActive}
-                      className={isActive ? item.activeClass : ""}
+                      className={`
+                        w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
+                        ${isActive ? "bg-primary/10 text-primary font-semibold" : "text-foreground hover:bg-muted hover:text-foreground"}
+                      `}
                     >
                       <Link
                         href={item.href}
-                        className="w-full"
+                        className="flex w-full items-center gap-3"
                         data-testid={`nav-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
                       >
                         <item.icon className="w-4 h-4" />
-                        <div className="flex flex-col items-start">
-                          <span className="text-base font-medium">{item.title}</span>
-                          {item.subtitle && (
-                            <span className="text-xs text-muted-foreground">{item.subtitle}</span>
-                          )}
-                        </div>
+                        <span className="text-base font-medium">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -118,8 +86,6 @@ export default function NexuraSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-
       </SidebarContent>
     </Sidebar>
   );

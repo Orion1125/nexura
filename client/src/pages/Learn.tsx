@@ -15,7 +15,7 @@ export default function Learn() {
             Educational content and tutorials about Web3, blockchain, and the Intuition ecosystem.
           </p>
         </div>
-
+        
         {/* Coming Soon Card */}
         <Card className="p-8" data-testid="coming-soon-card">
           <CardHeader className="text-center pb-6">

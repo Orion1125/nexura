@@ -1,132 +1,107 @@
-import { useMemo } from "react";
-import { useWallet } from "@/hooks/use-wallet";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Calendar } from "lucide-react";
-import { Link } from "wouter";
-import { useAuth } from "@/lib/auth";
-import { XP_PER_LEVEL, TIER_COLORS } from "@shared/schema";
 import { Progress } from "@/components/ui/progress";
+import { Calendar } from "lucide-react";
+import { Link } from "wouter";
+
+// Tier colors for badge display
+const TIER_COLORS = {
+  enchanter: "#8b5cf6",
+  illuminated: "#10b981",
+  conscious: "#3b82f6",
+  oracle: "#8b1538",
+  templar: "#ef4444"
+};
+
+// User Analytics Data
+const userAnalytics = {
+  xp: 175,
+  level: 8,
+  badges: 3,
+  questsCompleted: 12,
+  rewardsEarned: 42,
+  tTrustEarned: 6.0
+};
+
+// Level achievements
+const levelAchievementsInitial = [
+  { level: 5, xpRequired: 100, color: "#8b5cf6", unlocked: true },
+  { level: 10, xpRequired: 200, color: "#6b7280", unlocked: false },
+  { level: 20, xpRequired: 400, color: "#6b7280", unlocked: false },
+  { level: 30, xpRequired: 600, color: "#8b1538", unlocked: false },
+  { level: 40, xpRequired: 800, color: "#6b7280", unlocked: false },
+  { level: 50, xpRequired: 1000, color: "#6b7280", unlocked: false }
+];
 
 export default function Profile() {
-  const { user, loading } = useAuth();
+  // Mock profile data
+  const [userData] = useState({
+    username: "0xD524...9779",
+    displayName: "0xD524...9779",
+    joinedDate: "Nov 2024",
+    tier: "enchanter" as keyof typeof TIER_COLORS
+  });
 
-  // Only show profile content when server-provided `user` exists. Do not
-  // display any mock or wallet-derived data here.
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background overflow-auto p-6 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading profile...</p>
-        </div>
-      </div>
+  const [userXp, setUserXp] = useState(100); 
+  const [levelAchievements, setLevelAchievements] = useState(levelAchievementsInitial);
+
+  const tierDisplayName = userData.tier.charAt(0).toUpperCase() + userData.tier.slice(1);
+
+  const nextLevelToMint = levelAchievements.find(
+    (l) => userXp >= l.xpRequired && !l.unlocked
+  );
+
+  const handleMint = (level: number) => {
+    setLevelAchievements((prev) =>
+      prev.map((l) => (l.level === level ? { ...l, unlocked: true } : l))
     );
-  }
 
-  // If there's no server-backed `user` yet, render the profile page with
-  // safe default values (level 1, 0 XP, no roles). This keeps the UI stable
-  // and shows placeholders until the DB-backed profile exists.
-  const defaultUser = {
-    username: "guest",
-    displayName: "",
-    avatar: "",
-    level: 1,
-    xp: 0,
-    questsCompleted: 0,
-    ttrust: 0,
-    dateJoined: "",
-  } as const;
-
-  const userData = user ?? (defaultUser as any);
-
-  // Use server-provided profile fields only (fall back to defaults above)
-  const currentTier = useMemo(() => {
-    const lvl: number = userData.level ?? 1;
-    if (lvl >= 50) return "templar";
-    if (lvl >= 30) return "oracle";
-    if (lvl >= 15) return "conscious";
-    if (lvl >= 5) return "illuminated";
-    return "enchanter";
-  }, [userData.level]);
-
-  const tierDisplayName = currentTier.charAt(0).toUpperCase() + currentTier.slice(1);
-  const nextLevelXp = (userData.level + 1) * XP_PER_LEVEL;
-  const currentLevelXp = userData.level * XP_PER_LEVEL;
-  const progressXp = (userData.xp ?? 0) - currentLevelXp;
-  const neededXp = Math.max(0, nextLevelXp - (userData.xp ?? 0));
-  const progressPercentage = (progressXp / XP_PER_LEVEL) * 100;
+    const completedLevel = levelAchievements.find((l) => l.level === level);
+    if (completedLevel) {
+      const excessXp = userXp - completedLevel.xpRequired;
+      setUserXp(excessXp);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background overflow-auto p-6" data-testid="profile-page">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background overflow-auto p-6">
+      <div className="max-w-5xl mx-auto space-y-10">
+
+        {/* ---------------------------- PROFILE HEADER ---------------------------- */}
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
           <Link href="/profile/edit">
-            <Button data-testid="button-edit-profile">
-              <Edit2 className="w-4 h-4 mr-2" />
-              Edit Profile
-            </Button>
+            <Button>Edit Profile</Button>
           </Link>
         </div>
 
         <Card className="relative overflow-hidden">
-          <div 
-            className="absolute inset-0 opacity-20"
-            style={{
-              background: `linear-gradient(135deg, ${TIER_COLORS[currentTier]}, ${TIER_COLORS[currentTier]}80)`
-            }}
-          />
-
-          <CardContent className="relative p-8">
+          <CardContent className="p-8">
             <div className="flex items-start space-x-6">
-              <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-background">
-                  <AvatarImage src={userData.avatar ?? ""} />
-                  <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-green-500 via-blue-500 to-red-500 text-white">
-                    {userData.level ?? ""}
-                  </AvatarFallback>
-                </Avatar>
-                <div 
-                  className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-white text-base font-bold border-2 border-background bg-gradient-to-br from-blue-500 to-red-500"
-                >
-                  {userData.level}
-                </div>
-              </div>
+              <Avatar className="w-32 h-32 border-4 border-background">
+                <AvatarImage src="" />
+                <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-green-500 via-blue-500 to-red-500 text-white">
+                  {userData.displayName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
 
               <div className="flex-1 space-y-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-foreground">{userData.displayName ?? userData.username}</h2>
-                  <Badge 
-                    className="mt-2 text-white border-0"
-                    style={{ backgroundColor: TIER_COLORS[currentTier] }}
+                  <h2 className="text-2xl font-bold">{userData.displayName}</h2>
+                  <div
+                    className="mt-2 px-3 py-1 rounded text-white text-sm font-medium inline-block"
+                    style={{ backgroundColor: TIER_COLORS[userData.tier] }}
                   >
                     {tierDisplayName}
-                  </Badge>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">XP Progress</span>
-                    <span className="text-sm font-medium">{userData.xp ?? 0} / {nextLevelXp} XP</span>
-                  </div>
-                  <Progress 
-                    value={progressPercentage} 
-                    className="h-3"
-                    style={{
-                      backgroundColor: TIER_COLORS[currentTier] + "20"
-                    }}
-                  />
-                  <div className="text-xs text-muted-foreground">
-                    {neededXp} XP to next level
                   </div>
                 </div>
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Joined {userData.dateJoined ?? ""}
+                  Joined {userData.joinedDate}
                 </div>
               </div>
 
@@ -138,37 +113,83 @@ export default function Profile() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card data-testid="stat-quests">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Quests</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userData.questsCompleted ?? 0}</div>
-              <p className="text-xs text-muted-foreground mt-1">Completed</p>
-            </CardContent>
-          </Card>
+        {/* ---------------------------- USER ANALYTICS ---------------------------- */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">User Analytics</h2>
 
-          <Card data-testid="stat-total-xp">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total XP</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userData.xp ?? 0}</div>
-              <p className="text-xs text-muted-foreground mt-1">XP earned</p>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">Total XP</p><p className="text-2xl font-bold">{userAnalytics.xp}</p></CardContent></Card>
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">Level</p><p className="text-2xl font-bold">{userAnalytics.level}</p></CardContent></Card>
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">Badges</p><p className="text-2xl font-bold">{userAnalytics.badges}</p></CardContent></Card>
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">Quests Completed</p><p className="text-2xl font-bold">{userAnalytics.questsCompleted}</p></CardContent></Card>
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">Rewards Earned</p><p className="text-2xl font-bold">{userAnalytics.rewardsEarned}</p></CardContent></Card>
+            <Card><CardContent className="p-6"><p className="text-sm text-muted-foreground">tTRUST Earned</p><p className="text-2xl font-bold">{userAnalytics.tTrustEarned}</p></CardContent></Card>
+          </div>
+        </section>
 
-          <Card data-testid="stat-total-ttrust">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total tTRUST</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userData.ttrust ?? ""}</div>
-              <p className="text-xs text-muted-foreground mt-1">tTRUST earned</p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* ---------------------------- ACHIEVEMENTS / LEVELS ---------------------------- */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Achievements & Levels</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {levelAchievements.map((achievement) => {
+              const progress = Math.min((userXp / achievement.xpRequired) * 100, 100);
+              const isUnlocked = achievement.unlocked;
+              const canMint = nextLevelToMint?.level === achievement.level;
+
+              return (
+                <Card key={achievement.level} className={`${isUnlocked ? "border-primary/50 bg-primary/5" : ""}`}>
+                  <CardContent className="p-6 relative">
+
+                    {canMint && (
+                      <button
+                        onClick={() => handleMint(achievement.level)}
+                        className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-green-600"
+                      >
+                        Mint
+                      </button>
+                    )}
+
+                    <div className="flex items-center justify-between mb-4">
+                      <div
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold"
+                        style={{ backgroundColor: isUnlocked ? achievement.color : "#6b7280" }}
+                      >
+                        {achievement.level}
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">{Math.floor(progress)}%</p>
+                        {isUnlocked && <Badge className="bg-green-500 mt-1">Unlocked</Badge>}
+                      </div>
+                    </div>
+
+                    <h3 className="font-bold text-lg mb-1">Level {achievement.level}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Reach Level {achievement.level} by earning XP</p>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Progress</span>
+                        <span>{Math.min(userXp, achievement.xpRequired)} / {achievement.xpRequired}</span>
+                      </div>
+
+                      <Progress
+                        value={progress}
+                        className="h-2"
+                        style={{
+                          "--progress-background": isUnlocked
+                            ? achievement.color
+                            : "#6b7280"
+                        } as React.CSSProperties}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
       </div>
     </div>
   );

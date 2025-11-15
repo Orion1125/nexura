@@ -6,7 +6,7 @@ export default function CampaignCardExample() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       <CampaignCard
-        title="Theo x Nexura"
+        title="Theo x Layer3"
         projectName="Theo"
         projectLogo={layer3Logo}
         heroImage={questHero}
