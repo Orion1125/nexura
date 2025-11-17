@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import nexuraLogo from "../../attached_assets/NEXURA LOGO full.png";
 
 export function Home() { // Changed from default export to named export
   const [, setLocation] = useLocation();
@@ -8,7 +9,7 @@ export function Home() { // Changed from default export to named export
     <div
       className="min-h-screen flex flex-col items-center justify-center bg-black bg-cover bg-center px-4 sm:px-6"
       style={{
-        backgroundImage: `url("https://wallpapercave.com/wp/wp11484809.jpg")`,
+        backgroundImage: `url(https://wallpapercave.com/wp/wp11484809.jpg)`,
       }}
     >
       <div className="backdrop-blur-md bg-black/60 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-16 w-full max-w-xl text-center space-y-6 sm:space-y-10">
@@ -38,7 +39,7 @@ export function Home() { // Changed from default export to named export
           onClick={() => setLocation("/discover")}
           className="mt-4 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-5 sm:px-10 py-3 sm:py-4 text-sm sm:text-lg font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-transform"
         >
-          Discover
+          Get Started
         </Button>
       </div>
     </div>

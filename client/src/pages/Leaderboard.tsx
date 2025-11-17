@@ -10,14 +10,14 @@ export default function Leaderboard() {
   const leaderboardData = [
     { id: 1, name: "Ariana", avatar: "https://i.pravatar.cc/80?img=1", xp: 820, tTrust: 12.4 },
     { id: 2, name: "Liam", avatar: "https://i.pravatar.cc/80?img=4", xp: 640, tTrust: 4.2 },
-    { id: 3, name: "Promise", avatar: "https://i.pravatar.cc/80?img=2", xp: 500, tTrust: 9.1 },
+    { id: 3, name: "Nuel", avatar: "https://i.pravatar.cc/80?img=2", xp: 500, tTrust: 9.1 },
     { id: 4, name: "Daniel", avatar: "https://i.pravatar.cc/80?img=3", xp: 420, tTrust: 7.8 },
   ];
 
   const top3 = leaderboardData.slice(0, 3);
   const remaining = leaderboardData.slice(3);
 
-  const userRank = { rank: 3, name: "Promise", avatar: "https://i.pravatar.cc/80?img=2", xp: 500, tTrust: 9.1 };
+  const userRank = { rank: 3, name: "Nuel", avatar: "https://i.pravatar.cc/80?img=2", xp: 500, tTrust: 9.1 };
 
   return (
     <div className="min-h-screen p-6 bg-black text-white">
