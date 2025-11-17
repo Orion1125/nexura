@@ -42,7 +42,7 @@ export default function Rewards() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Your earnings on QUESTFLOW</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your earnings on NEXURA</h1>
           <div className="text-2xl font-bold text-foreground">0 tTRUST</div>
         </div>
 

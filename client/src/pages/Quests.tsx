@@ -9,38 +9,38 @@ import dailyQuestImg from "@assets/generated_images/Daily_Quest_Completion_Image
 import gettingStartedImg from "@assets/generated_images/Getting_Started_Quest_Image_9a7ae50b.png";
 
 export default function Quests() {
-  const [activeTab, setActiveTab] = useState("daily");
+  const [activeTab, setActiveTab] = useState("active");
   const [, setLocation] = useLocation();
   const [claimedTasks, setClaimedTasks] = useState<string[]>([]);
 
-  // Daily Quest Tasks (structured as single quest with multiple tasks)
-  const dailyQuestTasks = [
+  // Active/Weekly Quest Tasks (formerly Daily)
+  const activeQuestTasks = [
     {
-      id: "daily-task-1",
+      id: "active-task-1",
       title: "Verify Your Identity",
       description: "Complete your identity verification process",
-      reward: "10 XP + 0.5 tTRUST",
+      // reward: "10 XP + 0.5 tTRUST",
       completed: false
     },
     {
-      id: "daily-task-2", 
+      id: "active-task-2", 
       title: "Join Community Discussion",
       description: "Participate in at least one community discussion",
-      reward: "15 XP + 0.5 tTRUST",
+      // reward: "15 XP + 0.5 tTRUST",
       completed: false
     },
     {
-      id: "daily-task-3",
+      id: "active-task-3",
       title: "Share Intuition Project",
       description: "Share an Intuition project with the community",
-      reward: "20 XP + 0.8 tTRUST",
+      // reward: "20 XP + 0.8 tTRUST",
       completed: false
     },
     {
-      id: "daily-task-4",
+      id: "active-task-4",
       title: "Create an Attestation",
       description: "Make your first attestation on the Intuition platform",
-      reward: "25 XP + 1.0 tTRUST",
+      // reward: "25 XP + 1.0 tTRUST",
       completed: false
     }
   ];
@@ -50,21 +50,21 @@ export default function Quests() {
       id: "onetime-1",
       title: "Connect X",
       description: "Link your X account to verify your identity and join the community",
-      reward: "25 XP + 1.0 tTRUST",
+      // reward: "25 XP + 1.0 tTRUST",
       completed: false
     },
     {
       id: "onetime-2",
       title: "Connect Discord",
       description: "Join our Discord community to access exclusive channels and updates",
-      reward: "25 XP + 1.0 tTRUST",
+      // reward: "25 XP + 1.0 tTRUST",
       completed: false
     },
     {
       id: "onetime-3",
       title: "Own a .trust domain",
       description: "Register your .trust domain to establish your presence on the Intuition network",
-      reward: "50 XP + 2.0 tTRUST",
+      // reward: "50 XP + 2.0 tTRUST",
       completed: false
     }
   ];
@@ -159,16 +159,16 @@ export default function Quests() {
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Quests</h1>
           <p className="text-muted-foreground">
-            Complete daily tasks and one-time quests to earn XP and tTRUST rewards
+            Complete active (weekly) tasks and one-time quests to earn XP and tTRUST rewards
           </p>
         </div>
 
         {/* Quest Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2" data-testid="quest-tabs">
-            <TabsTrigger value="daily" data-testid="tab-daily">
+            <TabsTrigger value="active" data-testid="tab-active">
               <Calendar className="w-4 h-4 mr-2" />
-              Daily
+              Active
             </TabsTrigger>
             <TabsTrigger value="onetime" data-testid="tab-onetime">
               <CheckCircle className="w-4 h-4 mr-2" />
@@ -176,19 +176,19 @@ export default function Quests() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Daily Tasks */}
-          <TabsContent value="daily" className="space-y-6">
+          {/* Active Tasks */}
+          <TabsContent value="active" className="space-y-6">
             <div>
-              <h2 className="text-xl font-bold text-foreground mb-4">Daily Tasks</h2>
+              <h2 className="text-xl font-bold text-foreground mb-4">Active Tasks</h2>
               <p className="text-sm text-muted-foreground mb-6">
-                Complete these tasks today to earn XP and tTRUST • Resets every 24 hours
+                Complete these tasks weekly to earn XP and tTRUST • Resets every 7 days
               </p>
             </div>
             
-            {/* Daily Tasks List */}
+            {/* Active Tasks List */}
             <div className="space-y-4">
-              {dailyQuestTasks.map((task) => (
-                <Card key={task.id} className="p-6" data-testid={`daily-task-${task.id}`}>
+              {activeQuestTasks.map((task) => (
+                <Card key={task.id} className="p-6" data-testid={`active-task-${task.id}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
@@ -217,7 +217,7 @@ export default function Quests() {
                         onClick={() => handleClaimTask(task.id)}
                         data-testid={`claim-task-${task.id}`}
                       >
-                        {claimedTasks.includes(task.id) ? 'Claimed' : 'Claim'}
+                        {claimedTasks.includes(task.id) ? 'Completed' : 'Complete Task'}
                       </Button>
                     </div>
                   </div>
@@ -225,18 +225,18 @@ export default function Quests() {
               ))}
             </div>
             
-            {/* Daily Progress Summary */}
+            {/* Active Progress Summary */}
             <Card className="p-6 bg-gradient-to-r from-primary/10 to-primary/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-foreground">Daily Progress</h3>
+                  <h3 className="font-bold text-foreground">Active Progress</h3>
                   <p className="text-sm text-muted-foreground">
-                    {claimedTasks.length} of {dailyQuestTasks.length} tasks completed
+                    {claimedTasks.length} of {activeQuestTasks.length} tasks completed
                   </p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-primary">
-                    {Math.round((claimedTasks.length / dailyQuestTasks.length) * 100)}%
+                    {Math.round((claimedTasks.length / activeQuestTasks.length) * 100)}%
                   </div>
                   <div className="text-xs text-muted-foreground">Complete</div>
                 </div>
@@ -244,13 +244,12 @@ export default function Quests() {
             </Card>
           </TabsContent>
 
-
           {/* One Time Quests */}
           <TabsContent value="onetime" className="space-y-6">
             <div>
               <h2 className="text-xl font-bold text-foreground mb-4">One Time Quests</h2>
               <p className="text-sm text-muted-foreground mb-6">
-                Complete these essential quests to unlock the full QUESTFLOW experience
+                Complete these essential quests to unlock the full NEXURA experience
               </p>
             </div>
             
@@ -286,7 +285,7 @@ export default function Quests() {
                         onClick={() => handleClaimTask(quest.id)}
                         data-testid={`claim-quest-${quest.id}`}
                       >
-                        {claimedTasks.includes(quest.id) ? 'Claimed' : 'Claim'}
+                        {claimedTasks.includes(quest.id) ? 'Completed' : 'Complete Task'}
                       </Button>
                     </div>
                   </div>

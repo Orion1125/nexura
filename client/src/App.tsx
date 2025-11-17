@@ -4,10 +4,10 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/Home";
+import { Home } from "@/pages/Home";
 import Discover from "@/pages/Discover";
 import Rewards from "@/pages/Rewards";
 import Learn from "@/pages/Learn";
@@ -19,10 +19,8 @@ import QuestEnvironment from "@/pages/QuestEnvironment";
 import CampaignEnvironment from "@/pages/CampaignEnvironment";
 import Profile from "@/pages/Profile";
 import EditProfile from "@/pages/EditProfile";
-import Achievements from "@/pages/Achievements";
 import Tiers from "@/pages/Tiers";
 import Trade from "@/pages/Trade";
-import Analytics from "@/pages/Analytics";
 import Leaderboard from "@/pages/Leaderboard";
 
 import QuestflowSidebar from "@/components/QuestflowSidebar";
@@ -50,11 +48,9 @@ function Router() {
       <Route path="/quest/:questId" component={QuestEnvironment} />
       <Route path="/campaign/:campaignId" component={CampaignEnvironment} />
       <Route path="/trade" component={Trade} />
-      <Route path="/analytics" component={Analytics} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/profile" component={Profile} />
       <Route path="/profile/edit" component={EditProfile} />
-      <Route path="/achievements" component={Achievements} />
       <Route path="/tiers" component={Tiers} />
       <Route component={NotFound} />
     </Switch>
@@ -84,6 +80,7 @@ function App() {
               {/* Header */}
               {!hideLayout && (
                 <header className="flex items-center justify-between p-3 border-b border-border bg-background">
+                  <SidebarTrigger data-testid="button-sidebar-toggle" />
                   <ProfileBar />
                 </header>
               )}
